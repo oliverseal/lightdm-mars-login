@@ -1,0 +1,675 @@
+<html>
+<head>
+<style type="text/css">
+body
+{
+    background-image: url('mars-login-background.png');
+    background-color: rgb(0, 0, 0);
+    background-position: bottom right;
+
+    font-family: Ubuntu;
+    color: white;
+
+    /*background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.85, rgb(0, 0, 0)),
+        color-stop(0.03, rgb(0,0,10))
+    );*/
+
+}
+
+td
+{
+    font-family: Ubuntu;
+    font-size: 20px;
+    verical-align: middle;
+}
+
+#logins {
+    position: absolute;
+    top: -512px;
+    left: -512px;
+
+    width: 1024px;
+    height: 1024px;
+
+    background-color: rgba(0, 153, 255, 0.1);
+    border: 1px solid rgba(0, 153, 255, 0.1);
+
+    box-shadow: 0 0 128px rgba(0, 153, 255, 0.2);
+
+    border-radius: 512px;
+
+    -webkit-transition-timing-function: cubic-bezier(0.0, 0.35, 0.5, 1.2);
+}
+
+#sphere3d {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+
+    width: 1024px;
+    height: 1080px;
+}
+
+
+.user-container {
+    position: relative;
+    left: 960px;
+
+    width: 250px;
+    height: 60px;
+    white-space: nowrap;
+
+    margin: 50px;
+
+    -webkit-transition: all 0.5s;
+
+}
+
+.image-container {
+    position: absolute;
+    left: -40px;
+    top: -36px;
+    border-radius: 60px;
+
+    border: 1px solid rgba(10, 196, 255, 0.7);
+    height: 120px;
+    width: 120px;
+    text-align: center;
+
+    background-image: -webkit-gradient(
+        radial,
+        center center,
+        0,
+        center center,
+        120,
+        color-stop(0, rgba(6,65,87, 0.2)),
+        color-stop(0.84, rgba(125,221,245, 0.3))
+    );
+    box-shadow: 0 0 60px rgba(6,65,87, 0.5);
+
+
+    -webkit-transition: all 0.5s;
+    -webkit-transition-timing-function: cubic-bezier(0.0, 0.35, 0.5, 1.2);
+}
+
+.image-container img {
+    border: 1px solid rgba(10, 196, 255, 0.7);
+    margin-top: 9px;
+    border-radius: 50px;
+    width: 100px;
+    height: 100px;
+    opacity: 0.8;
+}
+
+.name-container {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    opacity: 0;
+
+    padding: 10px 10px 10px 100px;
+    background-color: rgba(0, 153, 255, 0.1);
+    border: 1px solid rgba(0, 153, 255, 0.1);
+    box-shadow: 0 0 32px rgba(6,65,87, 0.5);
+
+    border-radius: 4px;
+
+    -webkit-transition: left 0.5s, opacity 1s. margin-top 0.5s, margin-left 0.5s, font-size 0.8s, box-shadow 0.8s;
+    -webkit-transition-timing-function: cubic-bezier(0.0, 0.35, 0.5, 1.2);
+
+    -webkit-transform-origin: 14px 65px;
+}
+
+.pass-container {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    opacity: 0;
+
+    padding: 10px 10px 10px 100px;
+    background-color: rgba(0, 153, 255, 0.1);
+    border: 1px solid rgba(0, 153, 255, 0.1);
+
+    border-radius: 4px;
+
+
+    -webkit-transition: all 0.5s;
+    -webkit-transition-timing-function: cubic-bezier(0.0, 0.35, 0.5, 1.2);
+
+    -webkit-transform-origin: 14px 65px;
+}
+
+.pass-field {
+    background: rgba(255, 255, 255, 0.5);
+    color: rgb(0, 0, 0);
+
+    height: 1px;
+    width: 10px;
+
+    overflow: hidden;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.5);
+    padding: 10px;
+
+    font-size: 125%;
+
+    -webkit-transition: all 0.5s;
+}
+
+</style>
+
+<script type="text/javascript">
+
+if (window.lightdm == undefined) {
+//test vars
+lightdm = {
+    users: [
+        {
+            image: 'oliver.png',
+            display_name: 'Oliver Wilkerson',
+            name: 'oliver'
+        },
+        {
+            image: 'stock_person.png',
+            display_name: 'Moni Garcia',
+            name: 'moni'
+        },
+        {
+            image: 'stock_person.png',
+            display_name: 'Guest User',
+            name: 'guest'
+        }
+    ],
+    login: function() {
+        console.log('login fired');
+    },
+    cancel_timed_login: function() {
+        console.log('cancel_timed_login');
+    },
+    start_authentication: function() {
+        console.log('start_authentication');
+    }
+}
+}
+
+password_prompt = false;
+selected_user = null;
+time_remaining = 0
+
+function show_prompt(text)
+{
+   password_prompt = true;
+
+   //label = document.getElementById('password_prompt');
+   //label.innerHTML = text;
+   
+   /*user_table = document.getElementById('user_table');   
+   for (i in user_table.rows)
+   {
+       row = user_table.rows[i];
+       if (row.id != ('user_' + selected_user) && row.style != null) // FIXME: Don't know why there are rows with styles
+           row.style.opacity = 0.25;
+   }
+
+   entry = document.getElementById('password_entry');
+   entry.value = '';
+
+   table = document.getElementById('password_table');
+   table.style.visibility = "visible";
+
+   entry.focus();*/
+
+    var userContainer = document.querySelector('.user-container[data-username="'+selected_user+'"]');
+    userContainer.removeEventListener('mouseover', onContainerMouseOver);
+    userContainer.removeEventListener('mouseout', onContainerMouseOut);
+    userContainer.removeEventListener('click', onContainerClick);
+
+    var name = userContainer.querySelector('.name-container');
+    name.style.fontSize = '80%';
+    name.style.webkitTransform = 'rotate(-0.0873rad)';
+
+    var passContainer = userContainer.querySelector('.pass-container');
+    var passField = userContainer.querySelector('.pass-field');
+
+    passContainer.style.display = 'block';
+    passContainer.style.opacity = 1;
+
+    passField.style.display = 'block';
+    passField.style.height = '24px';
+    passField.style.opacity = 1;
+    passField.style.width = '155px';
+    passField.enabled = true;
+
+    passField.focus();
+}
+
+function show_message(text)
+{
+   //table = document.getElementById('message_table');
+   //label = document.getElementById('message_label');
+   //label.innerHTML = text;
+   //if (text.length > 0)
+   //    table.style.visibility = "visible";
+   //else
+   //    table.style.visibility = "hidden";
+
+}
+
+function show_error(text)
+{
+   show_message (text);
+}
+
+function reset()
+{
+   var userContainers = document.querySelectorAll('.user-container');
+   for (var i = userContainers.length - 1; i >= 0; i--) {
+       var c = userContainers[i];
+       resetUser(c, true);
+   };
+
+   password_prompt = false;
+}
+
+loading_text = ''
+
+function throbber()
+{
+   loading_text += '.';
+   if (loading_text == '....')
+       loading_text = '.'
+   label = document.getElementById('countdown_label');
+   label.innerHTML = loading_text;
+   setTimeout('throbber()', 1000);
+}
+
+function authentication_complete()
+{
+   if (lightdm.is_authenticated)
+       lightdm.login (lightdm.authentication_user, lightdm.default_session);
+   else
+       show_message ("Authentication Failed");
+
+   reset();
+   setTimeout('throbber()', 1000);
+}
+
+function timed_login(user)
+{
+   lightdm.login (lightdm.timed_login_user);
+   setTimeout('throbber()', 1000);
+}
+
+function start_authentication(username)
+{
+   lightdm.cancel_timed_login ();
+   label = document.getElementById('countdown_label');
+   if (label != null)
+       label.style.visibility = "hidden";
+
+   show_message("");
+   if (!password_prompt) {
+       selected_user = username;
+       lightdm.start_authentication(username);
+   }
+   
+   //FOR TESTING
+   show_prompt();
+}
+
+function provide_secret()
+{
+   entry = document.getElementById('password_entry');
+   lightdm.provide_secret(entry.value);
+}
+
+function countdown()
+{
+   label = document.getElementById('countdown_label');
+   label.innerHTML = ' in ' + time_remaining + ' seconds'
+   time_remaining--;
+   if (time_remaining >= 0)
+       setTimeout('countdown()', 1000);
+}
+
+time_remaining = lightdm.timed_login_delay;
+if (time_remaining > 0)
+    countdown();
+
+</script>
+</head>
+
+<body>
+    <canvas id="sphere3d" width="1024" height="1080"></canvas>
+    <div id="logins">
+    </div>
+
+<script>
+var RADIAN_CONSTANT = Math.PI/180;
+//users
+var loginsContainer = document.getElementById('logins');
+//document.write('<table id="user_table" style="margin: auto;">');
+for (i in lightdm.users)
+{
+    var user = lightdm.users[i];
+
+    if (user.image.length > 0)
+        image = user.image
+    else
+        image = 'file:///usr/share/icons/gnome/32x32/stock/generic/stock_person.png';
+
+    var userContainer = document.createElement('div');
+    userContainer.className = 'user-container';
+
+    var imageContainer = document.createElement('div');
+    imageContainer.className = 'image-container';
+
+    var image = document.createElement('img');
+    image.src = user.image;
+    imageContainer.appendChild(image);
+
+    var nameContainer = document.createElement('div');
+    nameContainer.className = 'name-container';
+    nameContainer.innerText = user.display_name;
+
+    var passContainer = document.createElement('div');
+    passContainer.className = 'pass-container';
+
+    var passField = document.createElement('input');
+    passField.type = 'password';
+    passField.className = 'pass-field';
+    passField.style.opacity = 0;
+    passField.enabled = false;
+    passContainer.appendChild(passField);
+
+    userContainer.appendChild(nameContainer);
+    userContainer.appendChild(imageContainer);
+    userContainer.appendChild(passContainer);
+
+    userContainer.dataset.username = user.name;
+
+    userContainer.addEventListener('click', onContainerClick);
+    userContainer.addEventListener('mouseover', onContainerMouseOver);
+    userContainer.addEventListener('mouseout', onContainerMouseOut);
+
+    loginsContainer.appendChild(userContainer);
+
+   /*document.write('<tr id="user_' + user.name +'"onclick="start_authentication(\'' + user.name + '\')" style="cursor: pointer;">');
+   document.write('<td><img width="48px" height="48px" src="' + image + '" /></td>');
+   document.write('<td>' + user.display_name + '</td>');
+   if (user.name == lightdm.timed_login_user && lightdm.timed_login_delay > 0)
+       document.write('<td id="countdown_label"></td>');
+   document.write('</tr>');*/
+}
+/*document.write('</table>');
+document.write('<table id="message_table" style="margin: auto; visibility: hidden;"><td id="message_label"></td></table>');
+document.write('<table id="password_table" style="margin: auto; visibility: hidden; color: red;"><tr>');
+document.write('<td id="password_prompt"></td>');
+document.write('<td><form action="javascript: provide_secret()"><input id="password_entry" type="password" /></form></td>');
+document.write('</tr></table>');*/
+
+function onContainerClick(e) {
+    var userContainers = document.querySelectorAll('.user-container');
+    for (var i = userContainers.length - 1; i >= 0; i--) {
+        var c = userContainers[i];
+        if (c != this)
+            resetUser(c, true);
+    };
+    var username = this.dataset.username;
+
+    start_authentication(username);
+}
+
+function onContainerMouseOver(e) {
+    highlightUser(this);
+}
+
+function onContainerMouseOut(e) {
+    resetUser(this);
+}
+
+function highlightUser(container) {
+    //container.style.backgroundColor = '-webkit-gradient( linear, left bottom, left top, color-stop(0.85, rgba(25, 136, 136, 0.7)), color-stop(0.03, rgba(25, 136, 136, 0.2)))';
+    var name = container.querySelector('.name-container');
+    name.style.paddingLeft = '115px';
+    name.style.paddingRight = '30px';
+    name.style.borderColor = 'rgba(25, 136, 136, 1)';
+    name.style.boxShadow = '0 0 100px rgba(6, 65, 255, 0.8);'
+
+    var image = container.querySelector('.image-container');
+    image.style.opacity = 1;
+}
+
+function resetUser(container, resetListeners) {
+    if (resetListeners) {
+        container.removeEventListener('mouseover', onContainerMouseOver);
+        container.removeEventListener('mouseout', onContainerMouseOut);
+        container.removeEventListener('click', onContainerClick);
+        container.addEventListener('click', onContainerClick);
+        container.addEventListener('mouseover', onContainerMouseOver);
+        container.addEventListener('mouseout', onContainerMouseOut);
+    }
+
+    var name = container.querySelector('.name-container');
+    name.style.paddingLeft = '100px';
+    name.style.paddingRight = '10px';
+    name.style.fontSize = '100%';
+    name.style.borderColor = null;
+    name.style.boxShadow = '0 0 32px rgba(6, 65, 87, 0.5);'
+
+
+    var image = container.querySelector('.image-container');
+    image.style.opacity = 0.8;
+
+    var passContainer = container.querySelector('.pass-container');
+    passContainer.style.opacity = 0;
+
+    var passField = container.querySelector('.pass-field');
+    passField.enabled = false;
+    passField.style.height = '1px';
+    passField.style.width = '10px';
+    passField.style.opacity = 0;
+
+
+    rotateName(container, container.dataset.homeRotation);
+}
+
+var userContainers = document.querySelectorAll('.user-container');
+var radianInterval = 20 * RADIAN_CONSTANT;
+for (var i = userContainers.length - 1; i >= 0; i--) {
+    var userContainer = userContainers[i];
+    userContainer.style.backgroundColor = 'rgba(0, 153, 255, 0.8);';
+    userContainer.style.width = '300px';
+    userContainer.style.height = '50px';
+    userContainer.dataset.startTop = userContainer.offsetTop;
+    userContainer.dataset.homeRotation = radianInterval*i + 10.0 * RADIAN_CONSTANT;
+    rotateName(userContainer, -170.0 * RADIAN_CONSTANT + userContainer.dataset.homeRotation);
+}
+
+function animateAllNames() {
+    var names = document.querySelectorAll('.name-container');
+    var images = document.querySelectorAll('.image-container');
+    var logins = document.getElementById('logins');
+    //10 degrees apart
+    var angleOffset = 10.0 * RADIAN_CONSTANT;
+
+    for (var i = userContainers.length - 1; i >= 0; i--) {
+        var nameContainer = names[i];
+        var imageContainer = images[i];
+        var userContainer = userContainers[i];
+
+        var transitionSpeed = (0.5 + i/10) + 's';
+
+        nameContainer.style.webkitTransitionDuration = transitionSpeed;
+        nameContainer.style.opacity = 1;
+
+        imageContainer.style.webkitTransitionDuration = transitionSpeed;
+        imageContainer.style.left = '-16px';
+        imageContainer.style.opacity = 1;
+
+        userContainer.style.webkitTransitionDuration = transitionSpeed;
+        rotateName(userContainer, radianInterval * i + angleOffset);
+
+//      var angle = angleOffset - Math.atan2(nameOriginX - userContainer.offsetLeft, nameOriginY - userContainer.offsetTop);
+        
+        //userContainer.style.borderRadius = '8px';
+        //userContainer.style.margin = '8px';
+    };
+}
+
+function rotateName(userContainer, toAngle) {
+
+    userContainer.style.left = 400 * Math.cos(toAngle) + 512;
+    userContainer.style.top = 400 * Math.sin(toAngle) + 590 - userContainer.dataset.startTop;
+
+    var name = userContainer.querySelector('.name-container');
+    name.style.webkitTransform = 'rotate(' + toAngle + 'rad)';
+
+    var pass = userContainer.querySelector('.pass-container');
+    pass.style.webkitTransform = 'rotate(' + toAngle + 'rad)';
+}
+
+window.addEventListener('load', animateAllNames);
+</script>
+<script src="sphere.js"></script>
+<script>
+
+    var sphere = new OrbitalPattern3D(50.5, 0.07);
+    var rotation = 0.0;
+    var rotationX = 10 * RADIAN_CONSTANT;
+    var rotationZ = 20.0 * RADIAN_CONSTANT;
+    var distance = 1000;
+
+
+    var offsetPoint = new Point3D();
+    offsetPoint.x = 135;
+    offsetPoint.y = 600;
+    offsetPoint.z = 0;
+
+    var canvas = document.getElementById('sphere3d');
+    var ctx = canvas.getContext('2d');
+    var width = canvas.getAttribute("width");
+    var height = canvas.getAttribute("height");
+    var x, y;
+    var increment = 0.10 * RADIAN_CONSTANT;
+    var cutoff = sphere.radius/2 - sphere.radius/5;
+    var p = new Point3D();
+
+    function drawPoint(ctx, x, y, size, color) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.arc(x, y, size, 0, 2 * Math.PI, true);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function render() {        
+        ctx.save();
+        ctx.clearRect(0, 0, width, height);
+
+        for (i = 0; i < sphere.numberOfVertexes; i++) {
+
+            p.x = sphere.point[i].x;
+            p.y = sphere.point[i].y;
+            p.z = sphere.point[i].z;
+
+            rotateX(p, rotation);
+            rotateY(p, rotation);
+            rotateZ(p, rotationZ);
+
+            x = projection(p.x, p.z, (width / 2.0) + offsetPoint.x, 100.0, distance);
+            y = projection(p.y, p.z, (height / 2.0) + offsetPoint.y, 100.0, distance);
+
+
+            if ((x >= 0) && (x < width)) {
+                if ((y >= 0) && (y < height)) {
+                    if (p.z > cutoff) {
+                        alpha = (p.z / sphere.radius) - 0.25;
+                        drawPoint(ctx, x, y, 1, "rgba(200,200,200,"+alpha+")");
+                    }
+                }
+            }
+        }
+        ctx.restore();
+
+        rotation += increment;
+        if (rotation >= 6.28)
+            rotation = 6.28 - rotation;
+
+
+        //also draw a segment that points at the mouse
+        drawPlanetSegment();
+    }
+
+    var lastKnownMouseX = canvas.offsetLeft + (canvas.width / 2);
+    var lastKnownMouseY = 0;
+    document.body.addEventListener('mousemove', function(e) {
+        lastKnownMouseX = e.x;
+        lastKnownMouseY = e.y;
+    });
+
+    //relative to canvas
+    var circleOriginX = document.body.clientWidth - (document.body.clientWidth - 650);
+    var circleOriginY = document.body.clientHeight - (document.body.clientHeight - document.body.clientHeight - 140);
+    //var circleOriginX = 650;
+    //var circleOriginY = 1136;
+    var circleWidthRadian = 18.0 * RADIAN_CONSTANT;
+    var circleAngleRadian, diffX, diffY = 0;
+    var slope, interceptX, interceptY = 1;
+    var circleStartRadius = 220;
+    var circleEndRadius = 610;
+
+    var blueGradient = ctx.createRadialGradient(circleOriginX, circleOriginY, circleStartRadius, circleOriginX, circleOriginY, circleEndRadius);
+    blueGradient.addColorStop(0.84, 'rgba(6,65,87,0.2)');
+    blueGradient.addColorStop(0, 'rgba(125,221,245, 0.0)');
+
+    var whiteGradient = ctx.createRadialGradient(circleOriginX, circleOriginY, circleStartRadius, circleOriginX, circleOriginY, circleEndRadius);
+    whiteGradient.addColorStop(0.84, 'rgba(6,65,87,0.4)');
+    whiteGradient.addColorStop(0, 'rgba(125,221,245, 0.0)');
+
+    function drawPlanetSegment() {
+        //
+        diffX = lastKnownMouseX - circleOriginX;
+        diffY = lastKnownMouseY - circleOriginY;
+
+        circleAngleRadian = 57.0 * RADIAN_CONSTANT - Math.atan2(diffX, diffY);
+
+        ctx.beginPath();
+        ctx.strokeStyle = whiteGradient;
+        ctx.fillStyle = blueGradient;
+        //get the slope
+        ctx.arc(circleOriginX, circleOriginY, circleEndRadius, circleAngleRadian - circleWidthRadian, circleAngleRadian + circleWidthRadian, false);
+        ctx.lineTo(circleStartRadius * Math.cos(circleAngleRadian + circleWidthRadian) + circleOriginX, circleStartRadius * Math.sin(circleAngleRadian + circleWidthRadian) + circleOriginY);
+        ctx.moveTo(circleEndRadius * Math.cos(circleAngleRadian - circleWidthRadian) + circleOriginX, circleEndRadius * Math.sin(circleAngleRadian - circleWidthRadian) + circleOriginY);
+        ctx.lineTo(circleStartRadius * Math.cos(circleAngleRadian - circleWidthRadian) + circleOriginX, circleStartRadius * Math.sin(circleAngleRadian - circleWidthRadian) + circleOriginY);
+        ctx.stroke();
+        ctx.arc(circleOriginX, circleOriginY, circleStartRadius, circleAngleRadian - circleWidthRadian, circleAngleRadian + circleWidthRadian, false);
+        ctx.fill();
+        ctx.endPath;
+
+    }
+
+    var timestampAtLastFrame = Date.now();
+    var targetFps = 60;
+    var msBetween = 1000 / targetFps;
+    function onFrameRender(time) {
+        if (time - timestampAtLastFrame >= msBetween) {
+            timestampAtLastFrame = time;
+            render();
+        }
+        webkitRequestAnimationFrame(onFrameRender);
+    }
+
+    webkitRequestAnimationFrame(onFrameRender);
+    //render();
+
+
+</script>
+</body>
+
+</html>

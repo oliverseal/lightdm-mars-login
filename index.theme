@@ -1,0 +1,6 @@
+[theme]
+name=Mars
+description=Mars Theme
+engine=lightdm-webkit-greeter
+url=index.html
+session=gnome-shell
